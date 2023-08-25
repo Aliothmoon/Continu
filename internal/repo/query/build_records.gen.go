@@ -30,6 +30,10 @@ func newBuildRecord(db *gorm.DB, opts ...gen.DOOption) buildRecord {
 	_buildRecord.ID = field.NewInt32(tableName, "id")
 	_buildRecord.Pid = field.NewInt32(tableName, "pid")
 	_buildRecord.Status = field.NewInt32(tableName, "status")
+	_buildRecord.Branch = field.NewString(tableName, "branch")
+	_buildRecord.Script = field.NewString(tableName, "script")
+	_buildRecord.WorkDir = field.NewString(tableName, "work_dir")
+	_buildRecord.ProjectURL = field.NewString(tableName, "project_url")
 	_buildRecord.CreatedAt = field.NewTime(tableName, "created_at")
 
 	_buildRecord.fillFieldMap()
@@ -40,11 +44,15 @@ func newBuildRecord(db *gorm.DB, opts ...gen.DOOption) buildRecord {
 type buildRecord struct {
 	buildRecordDo
 
-	ALL       field.Asterisk
-	ID        field.Int32
-	Pid       field.Int32
-	Status    field.Int32
-	CreatedAt field.Time
+	ALL        field.Asterisk
+	ID         field.Int32
+	Pid        field.Int32
+	Status     field.Int32
+	Branch     field.String
+	Script     field.String
+	WorkDir    field.String
+	ProjectURL field.String
+	CreatedAt  field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -64,6 +72,10 @@ func (b *buildRecord) updateTableName(table string) *buildRecord {
 	b.ID = field.NewInt32(table, "id")
 	b.Pid = field.NewInt32(table, "pid")
 	b.Status = field.NewInt32(table, "status")
+	b.Branch = field.NewString(table, "branch")
+	b.Script = field.NewString(table, "script")
+	b.WorkDir = field.NewString(table, "work_dir")
+	b.ProjectURL = field.NewString(table, "project_url")
 	b.CreatedAt = field.NewTime(table, "created_at")
 
 	b.fillFieldMap()
@@ -81,10 +93,14 @@ func (b *buildRecord) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (b *buildRecord) fillFieldMap() {
-	b.fieldMap = make(map[string]field.Expr, 4)
+	b.fieldMap = make(map[string]field.Expr, 8)
 	b.fieldMap["id"] = b.ID
 	b.fieldMap["pid"] = b.Pid
 	b.fieldMap["status"] = b.Status
+	b.fieldMap["branch"] = b.Branch
+	b.fieldMap["script"] = b.Script
+	b.fieldMap["work_dir"] = b.WorkDir
+	b.fieldMap["project_url"] = b.ProjectURL
 	b.fieldMap["created_at"] = b.CreatedAt
 }
 

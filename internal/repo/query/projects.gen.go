@@ -32,6 +32,7 @@ func newProject(db *gorm.DB, opts ...gen.DOOption) project {
 	_project.Status = field.NewInt32(tableName, "status")
 	_project.Branch = field.NewString(tableName, "branch")
 	_project.ProjectURL = field.NewString(tableName, "project_url")
+	_project.WorkDir = field.NewString(tableName, "work_dir")
 	_project.PrivateKey = field.NewString(tableName, "private_key")
 	_project.Script = field.NewString(tableName, "script")
 	_project.CreatedAt = field.NewTime(tableName, "created_at")
@@ -50,6 +51,7 @@ type project struct {
 	Status     field.Int32
 	Branch     field.String
 	ProjectURL field.String
+	WorkDir    field.String
 	PrivateKey field.String
 	Script     field.String
 	CreatedAt  field.Time
@@ -74,6 +76,7 @@ func (p *project) updateTableName(table string) *project {
 	p.Status = field.NewInt32(table, "status")
 	p.Branch = field.NewString(table, "branch")
 	p.ProjectURL = field.NewString(table, "project_url")
+	p.WorkDir = field.NewString(table, "work_dir")
 	p.PrivateKey = field.NewString(table, "private_key")
 	p.Script = field.NewString(table, "script")
 	p.CreatedAt = field.NewTime(table, "created_at")
@@ -93,12 +96,13 @@ func (p *project) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (p *project) fillFieldMap() {
-	p.fieldMap = make(map[string]field.Expr, 8)
+	p.fieldMap = make(map[string]field.Expr, 9)
 	p.fieldMap["id"] = p.ID
 	p.fieldMap["name"] = p.Name
 	p.fieldMap["status"] = p.Status
 	p.fieldMap["branch"] = p.Branch
 	p.fieldMap["project_url"] = p.ProjectURL
+	p.fieldMap["work_dir"] = p.WorkDir
 	p.fieldMap["private_key"] = p.PrivateKey
 	p.fieldMap["script"] = p.Script
 	p.fieldMap["created_at"] = p.CreatedAt

@@ -17,6 +17,7 @@ type Project struct {
 	Status     *int32     `gorm:"column:status" json:"Status"`
 	Branch     *string    `gorm:"column:branch" json:"Branch"`
 	ProjectURL *string    `gorm:"column:project_url" json:"ProjectUrl"`
+	WorkDir    *string    `gorm:"column:work_dir" json:"WorkDir"`
 	PrivateKey *string    `gorm:"column:private_key" json:"PrivateKey"`
 	Script     *string    `gorm:"column:script" json:"Script"`
 	CreatedAt  *time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"CreatedAt"`

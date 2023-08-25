@@ -2,6 +2,7 @@ package web
 
 import (
 	"context"
+	"github.com/Aliothmoon/Continu/internal/web/handler"
 	"github.com/Aliothmoon/Continu/internal/web/router"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -11,7 +12,9 @@ import (
 )
 
 func Start() {
-	h := server.Default()
+	h := server.Default(server.WithDisablePrintRoute(true))
+
+	h.Use(handler.GlobalErrHandler())
 
 	router.Register(h)
 
