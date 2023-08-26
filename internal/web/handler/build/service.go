@@ -3,6 +3,7 @@ package build
 import (
 	"context"
 	"errors"
+	"github.com/Aliothmoon/Continu/internal/logger"
 	"github.com/Aliothmoon/Continu/internal/repo/model"
 	"github.com/Aliothmoon/Continu/internal/repo/query"
 	"github.com/Aliothmoon/Continu/internal/web/biz"
@@ -10,6 +11,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"gorm.io/gen"
+	"os"
 	"strconv"
 	"sync"
 )
@@ -83,11 +85,35 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
-
-	publishTask(record.ID, project)
+	logger.Info("Pre Publish Task")
+	go PublishTask(&ConstructInfo{
+		BuildID: record.ID,
+		Project: project,
+		Log:     NewLogWriteCloser(record.ID),
+	})
 
 }
 
 func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
-
+	rid, err := strconv.Atoi(ctx.Param(biz.RID))
+	if err != nil {
+		handler.LaunchError(ctx, err)
+		return
+	}
+	value, ok := ProcessMap.Load(rid)
+	var msg string
+	if ok {
+		process := value.(*os.Process)
+		err := process.Kill()
+		if err != nil {
+			msg = err.Error()
+		} else {
+			msg = "Kill Ok"
+		}
+	} else {
+		msg = "Process Not Found "
+	}
+	ctx.JSON(consts.StatusOK, &biz.JsonModel{
+		Msg: msg,
+	})
 }
