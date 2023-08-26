@@ -12,6 +12,8 @@ type JsonModel struct {
 	Data any    `json:"Data,,omitempty"`
 }
 
+type Parameters []string
+
 type Project struct {
 	ID         int32  `json:"Id"`
 	Name       string `json:"Name"`
@@ -19,5 +21,6 @@ type Project struct {
 	Branch     string `json:"Branch"`
 	ProjectURL string `json:"ProjectUrl"`
 	PrivateKey string `json:"PrivateKey"`
-	Script     string `json:"Script"`
+	Bin        string `json:"Bin"`
+	Parameters string `json:"Parameters"`
 }

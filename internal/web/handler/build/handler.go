@@ -6,6 +6,7 @@ import (
 	"github.com/Aliothmoon/Continu/internal/repo/model"
 	"github.com/Aliothmoon/Continu/internal/repo/query"
 	"github.com/Aliothmoon/Continu/internal/web/biz"
+	"github.com/bytedance/sonic"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
@@ -13,7 +14,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"strings"
 )
 
 var (
@@ -149,32 +149,30 @@ func doProcessGit(c *ConstructInfo) (err error) {
 
 func doProcessExec(c *ConstructInfo) (err error) {
 	var (
-		cmdLine string
-		dir     string
+		bin  string
+		para biz.Parameters
+		dir  string
 	)
 
-	if c.Project.Script != nil {
-		cmdLine = *c.Project.Script
+	if c.Project.Bin != nil {
+		bin = *c.Project.Bin
 	}
-
+	if c.Project.Parameters != nil {
+		err := sonic.Unmarshal([]byte((*c.Project.Parameters)), &para)
+		if err != nil {
+			return err
+		}
+	}
 	if c.Project.WorkDir != nil {
 		dir = *c.Project.WorkDir
 	}
 
-	cs := strings.FieldsFunc(cmdLine, func(r rune) bool {
-		switch r {
-		case '\n', ' ':
-			return true
-		default:
-			return false
-		}
-	})
-	if len(cs) == 0 {
+	if bin == "" {
 		err = errors.New("Command line error ")
 		return
 	}
 
-	cmd := exec.Command(cs[0], cs[1:]...)
+	cmd := exec.Command(bin, para...)
 	cmd.Stdout = c.Log
 	cmd.Stderr = c.Log
 	cmd.Dir = dir
@@ -186,8 +184,8 @@ func doProcessExec(c *ConstructInfo) (err error) {
 
 	ProcessMap.Delete(c.BuildID)
 
-	c.Log.Close()
-	return
+	_ = c.Log.Close()
+	return err
 }
 
 func createLog(buildID int32, lg string) {

@@ -28,7 +28,8 @@ func AddProject(c context.Context, ctx *app.RequestContext) {
 		Branch:     &p.Branch,
 		ProjectURL: &p.ProjectURL,
 		PrivateKey: &p.PrivateKey,
-		Script:     &p.Script,
+		Bin:        &p.Bin,
+		Parameters: &p.Parameters,
 	})
 	if err != nil {
 		handler.LaunchError(ctx, err)
@@ -71,7 +72,8 @@ func UpdateProject(c context.Context, ctx *app.RequestContext) {
 		Branch:     &p.Branch,
 		ProjectURL: &p.ProjectURL,
 		PrivateKey: &p.PrivateKey,
-		Script:     &p.Script,
+		Bin:        &p.Bin,
+		Parameters: &p.Parameters,
 	})
 	if err != nil {
 		handler.LaunchError(ctx, err)

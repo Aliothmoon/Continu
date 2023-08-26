@@ -19,7 +19,8 @@ type Project struct {
 	ProjectURL *string    `gorm:"column:project_url" json:"ProjectUrl"`
 	WorkDir    *string    `gorm:"column:work_dir" json:"WorkDir"`
 	PrivateKey *string    `gorm:"column:private_key" json:"PrivateKey"`
-	Script     *string    `gorm:"column:script" json:"Script"`
+	Bin        *string    `gorm:"column:bin" json:"Bin"`
+	Parameters *string    `gorm:"column:parameters" json:"Parameters"`
 	CreatedAt  *time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"CreatedAt"`
 }
 

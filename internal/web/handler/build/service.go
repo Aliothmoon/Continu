@@ -16,10 +16,6 @@ import (
 	"sync"
 )
 
-const (
-	RID = "RID"
-)
-
 var (
 	DProject   = query.Project
 	DRecord    = query.BuildRecord
@@ -75,7 +71,8 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 		Pid:        &project.ID,
 		Status:     &status,
 		Branch:     project.Branch,
-		Script:     project.Script,
+		Parameters: project.Parameters,
+		Bin:        project.Bin,
 		WorkDir:    project.WorkDir,
 		ProjectURL: project.ProjectURL,
 	}
@@ -85,7 +82,7 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
-	logger.Info("Pre Publish Task")
+	logger.Infof("Pre Publish Task %v ", record.ID)
 	go PublishTask(&ConstructInfo{
 		BuildID: record.ID,
 		Project: project,
@@ -100,7 +97,7 @@ func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
-	value, ok := ProcessMap.Load(rid)
+	value, ok := ProcessMap.Load(int32(rid))
 	var msg string
 	if ok {
 		process := value.(*os.Process)
