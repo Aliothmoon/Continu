@@ -11,7 +11,8 @@ import (
 const MysqlDsn = "root:admin@(localhost:3306)/ci?charset=utf8mb4&parseTime=True&loc=Local"
 
 func init() {
-	mysqlInit()
+	//mysqlInit()
+	sqliteInit()
 }
 func mysqlInit() {
 	db, err := gorm.Open(mysql.Open(MysqlDsn))

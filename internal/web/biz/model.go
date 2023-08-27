@@ -28,8 +28,8 @@ type Project struct {
 	Parameters string `json:"parameters"`
 }
 type Log struct {
-	ID        int32   `json:"Id"`
-	BuildID   *int32  `json:"BuildId"`
-	Content   *string ` json:"Content"`
-	CreatedAt int64   ` json:"CreatedAt"`
+	ID        int32  `json:"id"`
+	BuildID   int32  `json:"buildId"`
+	Content   string ` json:"content"`
+	CreatedAt int64  ` json:"createdAt"`
 }

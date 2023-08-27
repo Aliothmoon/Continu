@@ -33,13 +33,13 @@ func GetBuildHistoryList(c context.Context, ctx *app.RequestContext) {
 
 	var records []*model.BuildRecord
 	if spec {
-		records, err = DRecord.Where(DRecord.Pid.Eq(int32(pid))).Find()
+		records, err = DRecord.Where(DRecord.Pid.Eq(int32(pid))).Order(DRecord.CreatedAt.Desc()).Find()
 		if err != nil {
 			handler.LaunchError(ctx, err)
 			return
 		}
 	} else {
-		records, err = DRecord.Find()
+		records, err = DRecord.Order(DRecord.CreatedAt.Desc()).Find()
 		if err != nil {
 			handler.LaunchError(ctx, err)
 			return
@@ -81,8 +81,8 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 	project := ps[0]
 	var status int32 = biz.BuildPending
 	record := model.BuildRecord{
-		Pid:        &project.ID,
-		Status:     &status,
+		Pid:        project.ID,
+		Status:     status,
 		Parameters: project.Parameters,
 		Bin:        project.Bin,
 		WorkDir:    project.WorkDir,

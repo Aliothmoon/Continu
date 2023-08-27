@@ -71,5 +71,6 @@ func main() {
 func Case2Camel(name string) string {
 	name = strings.Replace(name, "_", " ", -1)
 	name = strings.Title(name)
+	name = strings.ToLower(name[:1]) + name[1:]
 	return strings.Replace(name, " ", "", -1)
 }

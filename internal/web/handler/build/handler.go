@@ -49,8 +49,9 @@ func doInternal(c *ConstructInfo) (err error) {
 		err = doProcessWorkDir(c)
 
 		if err != nil {
-			logger.Errorf("doProcessWorkDir Err %v", err)
-			createLog(c.BuildID, fmt.Sprintf("doProcessWorkDir Err %v", err))
+			logger.Debugf("doProcessWorkDir Err %v", err)
+			tips := "Exception occurred in emptying the working directory"
+			createLog(c.BuildID, fmt.Sprintf("%v\nProcessWorkDir Err %v", tips, err))
 			return
 		} else {
 			logger.Info("doProcessWorkDir Complete")
@@ -59,8 +60,8 @@ func doInternal(c *ConstructInfo) (err error) {
 
 		err = doProcessGit(c)
 		if err != nil {
-			logger.Errorf("doProcessGit Err %v", err)
-			createLog(c.BuildID, fmt.Sprintf("doProcessGit Err %v", err))
+			logger.Debugf("doProcessGit Err %v", err)
+			createLog(c.BuildID, fmt.Sprintf("ProcessGit Err %v", err))
 			return
 		} else {
 			logger.Info("doProcessGit Complete")
@@ -70,8 +71,8 @@ func doInternal(c *ConstructInfo) (err error) {
 
 	err = doProcessExec(c)
 	if err != nil {
-		logger.Warnf("doProcessExec Err %v", err)
-		createLog(c.BuildID, fmt.Sprintf("doProcessExec Err %v", err))
+		logger.Debugf("doProcessExec Err %v", err)
+		createLog(c.BuildID, fmt.Sprintf("ProcessExec Err %v", err))
 		return
 	} else {
 		logger.Info("doProcessExec Complete")
@@ -116,7 +117,7 @@ func doProcessWorkDir(c *ConstructInfo) error {
 	return nil
 }
 
-func doProcessGit(c *ConstructInfo) (err error) {
+func doProcessGit(c *ConstructInfo) error {
 	var (
 		refer = "main"
 		pem   []byte
@@ -139,15 +140,12 @@ func doProcessGit(c *ConstructInfo) (err error) {
 		url = *p.ProjectURL
 	}
 	if url == "" {
-		logger.Warn("Error of git clone")
-		err = errors.New("Error of git clone ")
-		return
+		return errors.New("Error of git clone & URL is Null ")
 	}
 
 	auth, err := ssh.NewPublicKeys(user, pem, "")
 	if err != nil {
-		logger.Warn(err)
-		return
+		return err
 	}
 	_, err = git.PlainClone(dir, false, &git.CloneOptions{
 		URL:           url,
@@ -155,8 +153,7 @@ func doProcessGit(c *ConstructInfo) (err error) {
 		ReferenceName: plumbing.ReferenceName(refer),
 	})
 	if err != nil {
-		logger.Warn(err)
-		return
+		return err
 	}
 	return nil
 }
@@ -182,15 +179,17 @@ func doProcessExec(c *ConstructInfo) (err error) {
 	}
 
 	if bin == "" {
-		err = errors.New("Command line error ")
-		return
+		return errors.New("Command line error ")
 	}
 
 	cmd := exec.Command(bin, para...)
+
 	cmd.Stdout = c.Log
 	cmd.Stderr = c.Log
 	cmd.Dir = dir
+
 	err = cmd.Start()
+
 	if err != nil {
 		return err
 	}
@@ -205,10 +204,12 @@ func doProcessExec(c *ConstructInfo) (err error) {
 }
 
 func createLog(buildID int32, lg string) {
-
+	if lg == "" {
+		return
+	}
 	err := DLog.Create(&model.Log{
-		BuildID: &buildID,
-		Content: &lg,
+		BuildID: buildID,
+		Content: lg,
 	})
 	if err != nil {
 		logger.Warnf("Record Log An error occurred %v", err)

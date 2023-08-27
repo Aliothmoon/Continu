@@ -51,16 +51,11 @@ func GetBuildLogs(c context.Context, ctx *app.RequestContext) {
 	ls := make([]*biz.Log, len(logs))
 	for i := range ls {
 		l := logs[i]
-		var ct int64
-		if l.CreatedAt != nil {
-			ct = l.CreatedAt.UnixMilli()
-		}
-
 		ls[i] = &biz.Log{
 			ID:        l.ID,
 			BuildID:   l.BuildID,
 			Content:   l.Content,
-			CreatedAt: ct,
+			CreatedAt: l.CreatedAt.UnixMilli(),
 		}
 	}
 

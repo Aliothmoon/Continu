@@ -14,6 +14,8 @@ import (
 
 var (
 	DProject = query.Project
+	DRecord  = query.BuildRecord
+	DLog     = query.Log
 )
 
 func AddProject(c context.Context, ctx *app.RequestContext) {
@@ -23,13 +25,18 @@ func AddProject(c context.Context, ctx *app.RequestContext) {
 		return
 	}
 
+	if p.Name == "" {
+		handler.LaunchError(ctx, errors.New("Project Not Null "))
+		return
+	}
+
 	var isGit int32 = biz.GitProject
 	if !p.IsGit {
 		isGit = biz.NoneGitProject
 	}
 	err := DProject.Create(&model.Project{
-		Name:       &p.Name,
-		Status:     &p.Status,
+		Name:       p.Name,
+		Status:     p.Status,
 		Branch:     &p.Branch,
 		ProjectURL: &p.ProjectURL,
 		WorkDir:    &p.WorkDir,
@@ -62,6 +69,24 @@ func DelProject(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, errors.New("Delete Failed Can't Find ProjectInfo "))
 		return
 	}
+	var ids []int32
+	err = DRecord.Where(DRecord.Pid.Eq(int32(pid))).Select(DRecord.ID).Scan(&ids)
+	if err != nil {
+		handler.LaunchError(ctx, err)
+		return
+	}
+	_, err = DRecord.Where(DRecord.Pid.Eq(int32(pid))).Delete()
+	if err != nil {
+		handler.LaunchError(ctx, err)
+		return
+	}
+	_, err = DLog.Where(DLog.BuildID.In(ids...)).Delete()
+
+	if err != nil {
+		handler.LaunchError(ctx, err)
+		return
+	}
+
 	ctx.JSON(consts.StatusOK, &biz.JsonModel{
 		Msg: "Del Ok",
 	})
@@ -73,13 +98,18 @@ func UpdateProject(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
+	if p.Name == "" {
+		handler.LaunchError(ctx, errors.New("Project Not Null "))
+		return
+	}
+
 	var isGit int32 = biz.GitProject
 	if !p.IsGit {
 		isGit = biz.NoneGitProject
 	}
 	info, err := DProject.Where(DProject.ID.Eq(p.ID)).Updates(model.Project{
-		Name:       &p.Name,
-		Status:     &p.Status,
+		Name:       p.Name,
+		Status:     p.Status,
 		Branch:     &p.Branch,
 		ProjectURL: &p.ProjectURL,
 		PrivateKey: &p.PrivateKey,
@@ -99,7 +129,7 @@ func UpdateProject(c context.Context, ctx *app.RequestContext) {
 }
 
 func GetProjectList(c context.Context, ctx *app.RequestContext) {
-	projects, err := DProject.Find()
+	projects, err := DProject.Order(DProject.CreatedAt.Desc()).Find()
 	if err != nil {
 		handler.LaunchError(ctx, err)
 		return
