@@ -20,7 +20,7 @@ func ProcessWebHooks(c context.Context, ctx *app.RequestContext) {
 	if build.InternalProcessTask(pid, ctx) {
 		return
 	}
-	logger.Info("Received WebHooks 2 Project %v", pid)
+	logger.Infof("Received WebHooks 2 Project %v", pid)
 
 	ctx.Status(consts.StatusOK)
 }
