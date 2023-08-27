@@ -3,13 +3,17 @@ package web
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	_ "github.com/Aliothmoon/Continu/internal/banner"
 	"github.com/Aliothmoon/Continu/internal/web/handler"
 	"github.com/Aliothmoon/Continu/internal/web/router"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"os"
+	"strconv"
 )
 
 var (
@@ -27,7 +31,10 @@ var (
 )
 
 func Start() {
-	h := server.Default(server.WithDisablePrintRoute(true))
+
+	h := server.Default(
+		server.WithDisablePrintRoute(true),
+		server.WithHostPorts(fmt.Sprintf(":%v", LoadPort())))
 
 	h.Use(handler.GlobalErrHandler())
 
@@ -59,4 +66,16 @@ func LoadFs(h *server.Hertz) {
 	h.Any(s, func(c context.Context, ctx *app.RequestContext) {
 		ctx.Data(consts.StatusOK, consts.MIMEImageSVG, svg)
 	})
+}
+func LoadPort() int {
+	env, ok := os.LookupEnv("CI_PORT")
+	port := 6400
+	if ok {
+		var err error
+		port, err = strconv.Atoi(env)
+		if err != nil {
+			hlog.Info("Load [CI_PORT] port fail , use default :6400")
+		}
+	}
+	return port
 }
