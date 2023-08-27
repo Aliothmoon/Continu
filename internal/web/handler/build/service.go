@@ -23,16 +23,29 @@ var (
 )
 
 func GetBuildHistoryList(c context.Context, ctx *app.RequestContext) {
+
 	pid, err := strconv.Atoi(ctx.Param(biz.PID))
 	if err != nil {
 		handler.LaunchError(ctx, err)
 		return
 	}
-	records, err := DRecord.Where(DRecord.Pid.Eq(int32(pid))).Find()
-	if err != nil {
-		handler.LaunchError(ctx, err)
-		return
+	spec := pid != -1
+
+	var records []*model.BuildRecord
+	if spec {
+		records, err = DRecord.Where(DRecord.Pid.Eq(int32(pid))).Find()
+		if err != nil {
+			handler.LaunchError(ctx, err)
+			return
+		}
+	} else {
+		records, err = DRecord.Find()
+		if err != nil {
+			handler.LaunchError(ctx, err)
+			return
+		}
 	}
+
 	ctx.JSON(consts.StatusOK, &biz.JsonModel{
 		Code: 0,
 		Data: records,
@@ -70,11 +83,9 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 	record := model.BuildRecord{
 		Pid:        &project.ID,
 		Status:     &status,
-		Branch:     project.Branch,
 		Parameters: project.Parameters,
 		Bin:        project.Bin,
 		WorkDir:    project.WorkDir,
-		ProjectURL: project.ProjectURL,
 	}
 
 	err = DRecord.Create(&record)
@@ -84,9 +95,13 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 	}
 	logger.Infof("Pre Publish Task %v ", record.ID)
 	go PublishTask(&ConstructInfo{
-		BuildID: record.ID,
-		Project: project,
-		Log:     NewLogWriteCloser(record.ID),
+		BuildID:     record.ID,
+		ProjectInfo: project,
+		Log:         NewLogWriteCloser(record.ID),
+	})
+
+	ctx.JSON(consts.StatusOK, &biz.JsonModel{
+		Msg: "Add Task Complete",
 	})
 
 }
@@ -98,7 +113,7 @@ func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
 		return
 	}
 	value, ok := ProcessMap.Load(int32(rid))
-	var msg string
+	var msg = "Process Not Found "
 	if ok {
 		process := value.(*os.Process)
 		err := process.Kill()
@@ -107,8 +122,6 @@ func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
 		} else {
 			msg = "Kill Ok"
 		}
-	} else {
-		msg = "Process Not Found "
 	}
 	ctx.JSON(consts.StatusOK, &biz.JsonModel{
 		Msg: msg,

@@ -22,12 +22,19 @@ func AddProject(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
+
+	var isGit int32 = biz.GitProject
+	if !p.IsGit {
+		isGit = biz.NoneGitProject
+	}
 	err := DProject.Create(&model.Project{
 		Name:       &p.Name,
 		Status:     &p.Status,
 		Branch:     &p.Branch,
 		ProjectURL: &p.ProjectURL,
+		WorkDir:    &p.WorkDir,
 		PrivateKey: &p.PrivateKey,
+		IsGit:      &isGit,
 		Bin:        &p.Bin,
 		Parameters: &p.Parameters,
 	})
@@ -52,7 +59,7 @@ func DelProject(c context.Context, ctx *app.RequestContext) {
 		return
 	}
 	if info.RowsAffected == 0 {
-		handler.LaunchError(ctx, errors.New("Delete Failed Can't Find Project "))
+		handler.LaunchError(ctx, errors.New("Delete Failed Can't Find ProjectInfo "))
 		return
 	}
 	ctx.JSON(consts.StatusOK, &biz.JsonModel{
@@ -66,12 +73,18 @@ func UpdateProject(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
+	var isGit int32 = biz.GitProject
+	if !p.IsGit {
+		isGit = biz.NoneGitProject
+	}
 	info, err := DProject.Where(DProject.ID.Eq(p.ID)).Updates(model.Project{
 		Name:       &p.Name,
 		Status:     &p.Status,
 		Branch:     &p.Branch,
 		ProjectURL: &p.ProjectURL,
 		PrivateKey: &p.PrivateKey,
+		WorkDir:    &p.WorkDir,
+		IsGit:      &isGit,
 		Bin:        &p.Bin,
 		Parameters: &p.Parameters,
 	})
@@ -80,7 +93,7 @@ func UpdateProject(c context.Context, ctx *app.RequestContext) {
 		return
 	}
 	if info.RowsAffected == 0 {
-		handler.LaunchError(ctx, errors.New("Update Failed Can't Find Project "))
+		handler.LaunchError(ctx, errors.New("Update Failed Can't Find ProjectInfo "))
 		return
 	}
 }

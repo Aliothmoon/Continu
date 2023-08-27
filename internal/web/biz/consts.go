@@ -12,3 +12,9 @@ const (
 	BuildSuccess
 	BuildFailed
 )
+
+// Judge is Git Project
+const (
+	NoneGitProject = iota
+	GitProject
+)

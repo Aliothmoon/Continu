@@ -1,9 +1,5 @@
 package build
 
-import (
-	"github.com/Aliothmoon/Continu/internal/logger"
-)
-
 type LogWriteCloser struct {
 	bid  int32
 	rest []rune
@@ -13,7 +9,7 @@ func (l *LogWriteCloser) Write(p []byte) (n int, err error) {
 	s := string(p)
 	var si = -1
 	for i := range s {
-		if s[i] == '\n' {
+		if s[i] == '\n' || s[i] == '\r' {
 			var r []rune
 			if si == -1 {
 				si = 0
@@ -27,7 +23,7 @@ func (l *LogWriteCloser) Write(p []byte) (n int, err error) {
 			lg := string(r)
 			if lg != "" {
 				createLog(l.bid, lg)
-				logger.Debug(lg)
+				//logger.Debug(lg)
 			}
 
 			si = i + 1
@@ -48,7 +44,7 @@ func (l *LogWriteCloser) Close() error {
 		lg := string(l.rest)
 		if lg != "" {
 			createLog(l.bid, lg)
-			logger.Debug(lg)
+			//logger.Debug(lg)
 		}
 	}
 	return nil

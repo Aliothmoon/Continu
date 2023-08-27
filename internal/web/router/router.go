@@ -11,24 +11,25 @@ import (
 func Register(h *server.Hertz) {
 	g := h.Group("/api")
 
-	// Project List
+	// ProjectInfo List
 	g.GET("/projects", project.GetProjectList)
 
-	//  Add Project
+	//  Add ProjectInfo
 	g.POST("/project", project.AddProject)
-	//  Update Project
+	//  Update ProjectInfo
 	g.PUT("/project", project.UpdateProject)
-	// Delete Project
+	// Delete ProjectInfo
 	g.DELETE("/project/:PID", project.DelProject)
 
-	// Get Project Status
+	// Get ProjectInfo Status
 	g.GET("/project/status/:PID", project.GetProjectBuildStatus)
 
-	// Get Project Build List
+	// Get ProjectInfo Build List
 	g.GET("/build/history/:PID", build.GetBuildHistoryList)
 
-	// Build Project
-	g.POST("/build/:PID", build.AddBuildTask)
+	// Build ProjectInfo
+	g.PUT("/build/:PID", build.AddBuildTask)
+
 	// Cancel Build Task
 	g.POST("/build/cancel/:RID", build.CancelBuildTask)
 

@@ -15,7 +15,7 @@ type Log struct {
 	ID        int32      `gorm:"column:id;primaryKey;autoIncrement:true" json:"Id"`
 	BuildID   *int32     `gorm:"column:build_id" json:"BuildId"`
 	Content   *string    `gorm:"column:content" json:"Content"`
-	CreatedAt *time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"CreatedAt"`
+	CreatedAt *time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP(3)" json:"CreatedAt"`
 }
 
 // TableName Log's table name

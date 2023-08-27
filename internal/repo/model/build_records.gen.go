@@ -12,15 +12,13 @@ const TableNameBuildRecord = "build_records"
 
 // BuildRecord mapped from table <build_records>
 type BuildRecord struct {
-	ID         int32      `gorm:"column:id;primaryKey;autoIncrement:true" json:"Id"`
-	Pid        *int32     `gorm:"column:pid" json:"Pid"`
-	Status     *int32     `gorm:"column:status" json:"Status"`
-	Branch     *string    `gorm:"column:branch" json:"Branch"`
-	Bin        *string    `gorm:"column:bin" json:"Bin"`
-	Parameters *string    `gorm:"column:parameters" json:"Parameters"`
-	WorkDir    *string    `gorm:"column:work_dir" json:"WorkDir"`
-	ProjectURL *string    `gorm:"column:project_url" json:"ProjectUrl"`
-	CreatedAt  *time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"CreatedAt"`
+	ID         int32      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	Pid        *int32     `gorm:"column:pid" json:"pid"`
+	Status     *int32     `gorm:"column:status" json:"status"`
+	Bin        *string    `gorm:"column:bin" json:"bin"`
+	Parameters *string    `gorm:"column:parameters" json:"parameters"`
+	WorkDir    *string    `gorm:"column:work_dir" json:"workDir"`
+	CreatedAt  *time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"createdAt"`
 }
 
 // TableName BuildRecord's table name
