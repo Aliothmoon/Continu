@@ -34,7 +34,9 @@ func Start() {
 
 	h := server.Default(
 		server.WithDisablePrintRoute(true),
-		server.WithHostPorts(fmt.Sprintf(":%v", LoadPort())))
+		server.WithHostPorts(fmt.Sprintf(":%v", LoadPort())),
+		server.WithExitWaitTime(0),
+	)
 
 	h.Use(handler.GlobalErrHandler())
 
