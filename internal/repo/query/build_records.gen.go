@@ -33,7 +33,7 @@ func newBuildRecord(db *gorm.DB, opts ...gen.DOOption) buildRecord {
 	_buildRecord.Bin = field.NewString(tableName, "bin")
 	_buildRecord.Parameters = field.NewString(tableName, "parameters")
 	_buildRecord.WorkDir = field.NewString(tableName, "work_dir")
-	_buildRecord.CreatedAt = field.NewTime(tableName, "created_at")
+	_buildRecord.CreatedAt = field.NewInt64(tableName, "created_at")
 
 	_buildRecord.fillFieldMap()
 
@@ -50,7 +50,7 @@ type buildRecord struct {
 	Bin        field.String
 	Parameters field.String
 	WorkDir    field.String
-	CreatedAt  field.Time
+	CreatedAt  field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -73,7 +73,7 @@ func (b *buildRecord) updateTableName(table string) *buildRecord {
 	b.Bin = field.NewString(table, "bin")
 	b.Parameters = field.NewString(table, "parameters")
 	b.WorkDir = field.NewString(table, "work_dir")
-	b.CreatedAt = field.NewTime(table, "created_at")
+	b.CreatedAt = field.NewInt64(table, "created_at")
 
 	b.fillFieldMap()
 

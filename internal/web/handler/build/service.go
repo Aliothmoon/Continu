@@ -14,6 +14,7 @@ import (
 	"os"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var (
@@ -86,6 +87,7 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 		Parameters: project.Parameters,
 		Bin:        project.Bin,
 		WorkDir:    project.WorkDir,
+		CreatedAt:  time.Now().UnixMilli(),
 	}
 
 	err = DRecord.Create(&record)

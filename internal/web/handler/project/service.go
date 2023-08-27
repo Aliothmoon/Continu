@@ -10,6 +10,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"strconv"
+	"time"
 )
 
 var (
@@ -44,6 +45,7 @@ func AddProject(c context.Context, ctx *app.RequestContext) {
 		IsGit:      &isGit,
 		Bin:        &p.Bin,
 		Parameters: &p.Parameters,
+		CreatedAt:  time.Now().UnixMilli(),
 	})
 	if err != nil {
 		handler.LaunchError(ctx, err)
@@ -126,6 +128,9 @@ func UpdateProject(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, errors.New("Update Failed Can't Find ProjectInfo "))
 		return
 	}
+	ctx.JSON(consts.StatusOK, &biz.JsonModel{
+		Msg: "Update Ok",
+	})
 }
 
 func GetProjectList(c context.Context, ctx *app.RequestContext) {

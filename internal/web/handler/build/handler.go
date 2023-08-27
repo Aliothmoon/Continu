@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"time"
 )
 
 var (
@@ -208,8 +209,9 @@ func createLog(buildID int32, lg string) {
 		return
 	}
 	err := DLog.Create(&model.Log{
-		BuildID: buildID,
-		Content: lg,
+		BuildID:   buildID,
+		Content:   lg,
+		CreatedAt: time.Now().UnixMilli(),
 	})
 	if err != nil {
 		logger.Warnf("Record Log An error occurred %v", err)

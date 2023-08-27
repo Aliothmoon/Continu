@@ -30,7 +30,7 @@ func newLog(db *gorm.DB, opts ...gen.DOOption) log {
 	_log.ID = field.NewInt32(tableName, "id")
 	_log.BuildID = field.NewInt32(tableName, "build_id")
 	_log.Content = field.NewString(tableName, "content")
-	_log.CreatedAt = field.NewTime(tableName, "created_at")
+	_log.CreatedAt = field.NewInt64(tableName, "created_at")
 
 	_log.fillFieldMap()
 
@@ -44,7 +44,7 @@ type log struct {
 	ID        field.Int32
 	BuildID   field.Int32
 	Content   field.String
-	CreatedAt field.Time
+	CreatedAt field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -64,7 +64,7 @@ func (l *log) updateTableName(table string) *log {
 	l.ID = field.NewInt32(table, "id")
 	l.BuildID = field.NewInt32(table, "build_id")
 	l.Content = field.NewString(table, "content")
-	l.CreatedAt = field.NewTime(table, "created_at")
+	l.CreatedAt = field.NewInt64(table, "created_at")
 
 	l.fillFieldMap()
 

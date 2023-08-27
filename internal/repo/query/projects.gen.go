@@ -37,7 +37,7 @@ func newProject(db *gorm.DB, opts ...gen.DOOption) project {
 	_project.PrivateKey = field.NewString(tableName, "private_key")
 	_project.Bin = field.NewString(tableName, "bin")
 	_project.Parameters = field.NewString(tableName, "parameters")
-	_project.CreatedAt = field.NewTime(tableName, "created_at")
+	_project.CreatedAt = field.NewInt64(tableName, "created_at")
 
 	_project.fillFieldMap()
 
@@ -58,7 +58,7 @@ type project struct {
 	PrivateKey field.String
 	Bin        field.String
 	Parameters field.String
-	CreatedAt  field.Time
+	CreatedAt  field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -85,7 +85,7 @@ func (p *project) updateTableName(table string) *project {
 	p.PrivateKey = field.NewString(table, "private_key")
 	p.Bin = field.NewString(table, "bin")
 	p.Parameters = field.NewString(table, "parameters")
-	p.CreatedAt = field.NewTime(table, "created_at")
+	p.CreatedAt = field.NewInt64(table, "created_at")
 
 	p.fillFieldMap()
 

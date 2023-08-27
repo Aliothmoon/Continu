@@ -23,7 +23,7 @@ func mysqlInit() {
 }
 
 func sqliteInit() {
-	db, err := gorm.Open(sqlite.Open("test.db"))
+	db, err := gorm.Open(sqlite.Open("data.db"))
 	if err != nil {
 		panic(fmt.Errorf("cannot establish db connection: %w", err))
 	}

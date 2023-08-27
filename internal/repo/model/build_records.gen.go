@@ -4,21 +4,17 @@
 
 package model
 
-import (
-	"time"
-)
-
 const TableNameBuildRecord = "build_records"
 
 // BuildRecord mapped from table <build_records>
 type BuildRecord struct {
-	ID         int32     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	Pid        int32     `gorm:"column:pid;not null;index:pid,priority:1" json:"pid"`
-	Status     int32     `gorm:"column:status;not null" json:"status"`
-	Bin        *string   `gorm:"column:bin" json:"bin"`
-	Parameters *string   `gorm:"column:parameters" json:"parameters"`
-	WorkDir    *string   `gorm:"column:work_dir" json:"workDir"`
-	CreatedAt  time.Time `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP(3)" json:"createdAt"`
+	ID         int32   `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	Pid        int32   `gorm:"column:pid;not null;index:pid,priority:1" json:"pid"`
+	Status     int32   `gorm:"column:status;not null" json:"status"`
+	Bin        *string `gorm:"column:bin" json:"bin"`
+	Parameters *string `gorm:"column:parameters" json:"parameters"`
+	WorkDir    *string `gorm:"column:work_dir" json:"workDir"`
+	CreatedAt  int64   `gorm:"column:created_at;not null" json:"createdAt"`
 }
 
 // TableName BuildRecord's table name

@@ -9,7 +9,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"strconv"
-	"time"
 )
 
 var (
@@ -35,8 +34,7 @@ func GetBuildLogs(c context.Context, ctx *app.RequestContext) {
 		return
 	}
 
-	ti := time.UnixMilli(t)
-	logs, err := DLog.Where(DLog.BuildID.Eq(int32(rid)), DLog.CreatedAt.Gt(ti)).Limit(300).Find()
+	logs, err := DLog.Where(DLog.BuildID.Eq(int32(rid)), DLog.CreatedAt.Gt(t)).Limit(300).Find()
 	if err != nil {
 		handler.LaunchError(ctx, err)
 		return
@@ -55,7 +53,7 @@ func GetBuildLogs(c context.Context, ctx *app.RequestContext) {
 			ID:        l.ID,
 			BuildID:   l.BuildID,
 			Content:   l.Content,
-			CreatedAt: l.CreatedAt.UnixMilli(),
+			CreatedAt: l.CreatedAt,
 		}
 	}
 

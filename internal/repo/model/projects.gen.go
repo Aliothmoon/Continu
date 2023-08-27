@@ -4,25 +4,21 @@
 
 package model
 
-import (
-	"time"
-)
-
 const TableNameProject = "projects"
 
 // Project mapped from table <projects>
 type Project struct {
-	ID         int32     `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	Name       string    `gorm:"column:name;not null" json:"name"`
-	Status     int32     `gorm:"column:status;not null" json:"status"`
-	Branch     *string   `gorm:"column:branch" json:"branch"`
-	ProjectURL *string   `gorm:"column:project_url" json:"projectUrl"`
-	IsGit      *int32    `gorm:"column:is_git" json:"isGit"`
-	WorkDir    *string   `gorm:"column:work_dir" json:"workDir"`
-	PrivateKey *string   `gorm:"column:private_key" json:"privateKey"`
-	Bin        *string   `gorm:"column:bin" json:"bin"`
-	Parameters *string   `gorm:"column:parameters" json:"parameters"`
-	CreatedAt  time.Time `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP(3)" json:"createdAt"`
+	ID         int32   `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	Name       string  `gorm:"column:name;not null" json:"name"`
+	Status     int32   `gorm:"column:status;not null" json:"status"`
+	Branch     *string `gorm:"column:branch" json:"branch"`
+	ProjectURL *string `gorm:"column:project_url" json:"projectUrl"`
+	IsGit      *int32  `gorm:"column:is_git" json:"isGit"`
+	WorkDir    *string `gorm:"column:work_dir" json:"workDir"`
+	PrivateKey *string `gorm:"column:private_key" json:"privateKey"`
+	Bin        *string `gorm:"column:bin" json:"bin"`
+	Parameters *string `gorm:"column:parameters" json:"parameters"`
+	CreatedAt  int64   `gorm:"column:created_at;not null" json:"createdAt"`
 }
 
 // TableName Project's table name
