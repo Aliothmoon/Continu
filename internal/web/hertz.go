@@ -22,9 +22,9 @@ var (
 	//go:embed static/assets/index-72119a25.css
 	css []byte
 	c   = "/assets/index-72119a25.css"
-	//go:embed static/assets/index-12befaf7.js
+	//go:embed static/assets/index-c93bc281.js
 	js []byte
-	j  = "assets/index-12befaf7.js"
+	j  = "/assets/index-c93bc281.js"
 	//go:embed static/vite.svg
 	svg []byte
 	s   = "/vite.svg"

@@ -37,5 +37,5 @@ func Register(h *server.Hertz) {
 	g.GET("/log/:RID", logs.GetBuildLogs)
 
 	// WebHooks
-	g.POST("/hooks/:id", hooks.ProcessWebHooks)
+	g.POST("/hooks/:PID", hooks.ProcessWebHooks)
 }

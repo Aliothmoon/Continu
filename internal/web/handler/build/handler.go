@@ -46,7 +46,6 @@ func doInternal(c *ConstructInfo) (err error) {
 		isGit = *c.ProjectInfo.IsGit != 0
 	}
 	if isGit {
-		logger.Info("Publish Task")
 		err = doProcessWorkDir(c)
 
 		if err != nil {
@@ -55,7 +54,6 @@ func doInternal(c *ConstructInfo) (err error) {
 			createLog(c.BuildID, fmt.Sprintf("%v\nProcessWorkDir Err %v", tips, err))
 			return
 		} else {
-			logger.Info("doProcessWorkDir Complete")
 			createLog(c.BuildID, "doProcessWorkDir Complete")
 		}
 
@@ -65,7 +63,6 @@ func doInternal(c *ConstructInfo) (err error) {
 			createLog(c.BuildID, fmt.Sprintf("ProcessGit Err %v", err))
 			return
 		} else {
-			logger.Info("doProcessGit Complete")
 			createLog(c.BuildID, "doProcessGit Complete")
 		}
 	}
@@ -76,7 +73,6 @@ func doInternal(c *ConstructInfo) (err error) {
 		createLog(c.BuildID, fmt.Sprintf("ProcessExec Err %v", err))
 		return
 	} else {
-		logger.Info("doProcessExec Complete")
 		createLog(c.BuildID, "doProcessExec Complete")
 	}
 	return nil

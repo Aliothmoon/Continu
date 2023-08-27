@@ -3,7 +3,6 @@ package build
 import (
 	"context"
 	"errors"
-	"github.com/Aliothmoon/Continu/internal/logger"
 	"github.com/Aliothmoon/Continu/internal/repo/model"
 	"github.com/Aliothmoon/Continu/internal/repo/query"
 	"github.com/Aliothmoon/Continu/internal/web/biz"
@@ -59,25 +58,36 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 		handler.LaunchError(ctx, err)
 		return
 	}
+	if InternalProcessTask(pid, ctx) {
+		return
+	}
+
+	ctx.JSON(consts.StatusOK, &biz.JsonModel{
+		Msg: "Add Task Complete",
+	})
+
+}
+
+func InternalProcessTask(pid int, ctx *app.RequestContext) bool {
 	cond := []gen.Condition{DProject.ID.Eq(int32(pid)), DProject.Status.Eq(biz.ProjectIdle)}
 	ps, err := DProject.Where(cond...).Find()
 	if err != nil {
 		handler.LaunchError(ctx, err)
-		return
+		return true
 	}
 	if len(ps) == 0 {
 		handler.LaunchError(ctx, errors.New("Record Not Found "))
-		return
+		return true
 	}
 
 	result, err := DProject.Where(cond...).Update(DProject.Status, biz.ProjectPending)
 	if err != nil {
 		handler.LaunchError(ctx, err)
-		return
+		return true
 	}
 	if result.RowsAffected != 1 {
 		handler.LaunchError(ctx, errors.New("Optimistic lock takes effect "))
-		return
+		return true
 	}
 	project := ps[0]
 	var status int32 = biz.BuildPending
@@ -93,19 +103,14 @@ func AddBuildTask(c context.Context, ctx *app.RequestContext) {
 	err = DRecord.Create(&record)
 	if err != nil {
 		handler.LaunchError(ctx, err)
-		return
+		return true
 	}
-	logger.Infof("Pre Publish Task %v ", record.ID)
 	go PublishTask(&ConstructInfo{
 		BuildID:     record.ID,
 		ProjectInfo: project,
 		Log:         NewLogWriteCloser(record.ID),
 	})
-
-	ctx.JSON(consts.StatusOK, &biz.JsonModel{
-		Msg: "Add Task Complete",
-	})
-
+	return false
 }
 
 func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
