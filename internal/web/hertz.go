@@ -8,12 +8,14 @@ import (
 	"github.com/Aliothmoon/Continu/internal/web/handler"
 	"github.com/Aliothmoon/Continu/internal/web/router"
 	"github.com/cloudwego/hertz/pkg/app"
+	auth "github.com/cloudwego/hertz/pkg/app/middlewares/server/basic_auth"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -52,23 +54,39 @@ func Start() {
 	h.Spin()
 }
 
-func LoadFs(h *server.Hertz) {
-	h.Any("/", func(c context.Context, ctx *app.RequestContext) {
-		ctx.Redirect(consts.StatusTemporaryRedirect, []byte("/index.html"))
-	})
-	h.Any("/index.html", func(c context.Context, ctx *app.RequestContext) {
-		ctx.Data(consts.StatusOK, consts.MIMETextHtml, index)
-	})
-	h.Any(c, func(c context.Context, ctx *app.RequestContext) {
-		ctx.Data(consts.StatusOK, consts.MIMETextCss, css)
-	})
-	h.Any(j, func(c context.Context, ctx *app.RequestContext) {
-		ctx.Data(consts.StatusOK, consts.MIMETextJavascript, js)
-	})
-	h.Any(s, func(c context.Context, ctx *app.RequestContext) {
-		ctx.Data(consts.StatusOK, consts.MIMEImageSVG, svg)
-	})
+func Auth(h app.HandlerFunc) []app.HandlerFunc {
+	env, ok := os.LookupEnv("CI_USER")
+	ac := make(map[string]string)
+	if ok {
+		res := strings.Split(env, "#")
+		if len(res) == 2 {
+			ac[res[0]] = res[1]
+		}
+	}
+	return []app.HandlerFunc{
+		auth.BasicAuth(ac),
+		h,
+	}
 }
+
+func LoadFs(h *server.Hertz) {
+	h.Any("/", Auth(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Redirect(consts.StatusTemporaryRedirect, []byte("/index.html"))
+	})...)
+	h.Any("/index.html", Auth(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Data(consts.StatusOK, consts.MIMETextHtml, index)
+	})...)
+	h.Any(c, Auth(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Data(consts.StatusOK, consts.MIMETextCss, css)
+	})...)
+	h.Any(j, Auth(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Data(consts.StatusOK, consts.MIMETextJavascript, js)
+	})...)
+	h.Any(s, Auth(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Data(consts.StatusOK, consts.MIMEImageSVG, svg)
+	})...)
+}
+
 func LoadPort() int {
 	env, ok := os.LookupEnv("CI_PORT")
 	port := 6400

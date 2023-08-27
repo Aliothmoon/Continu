@@ -3,6 +3,7 @@ module github.com/Aliothmoon/Continu
 go 1.20
 
 require (
+	github.com/bytedance/sonic v1.8.1
 	github.com/cloudwego/hertz v0.6.7
 	github.com/go-git/go-git/v5 v5.8.1
 	go.uber.org/zap v1.25.0
@@ -20,7 +21,6 @@ require (
 	github.com/acomagu/bufpipe v1.0.4 // indirect
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
 	github.com/bytedance/gopkg v0.0.0-20220413063733-65bf48ffb3a7 // indirect
-	github.com/bytedance/sonic v1.8.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
 	github.com/cloudwego/netpoll v0.3.2 // indirect
@@ -33,7 +33,6 @@ require (
 	github.com/golang/protobuf v1.5.0 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
-	github.com/hertz-contrib/reverseproxy v1.0.3 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
