@@ -120,15 +120,21 @@ func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
 		return
 	}
 	value, ok := ProcessMap.Load(int32(rid))
-	var msg = "Process Not Found "
+	var msg string
 	if ok {
 		process := value.(*os.Process)
+		err = process.Release()
+		if err != nil {
+			msg += err.Error() + "\n"
+		}
 		err := process.Kill()
 		if err != nil {
-			msg = err.Error()
+			msg += err.Error()
 		} else {
 			msg = "Kill Ok"
 		}
+	} else {
+		msg = "Process Not Found "
 	}
 	ctx.JSON(consts.StatusOK, &biz.JsonModel{
 		Msg: msg,
