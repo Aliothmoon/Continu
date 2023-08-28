@@ -1,8 +1,24 @@
 package build
 
+import "strings"
+
 type LogWriteCloser struct {
 	bid  int32
 	rest []rune
+	buf  []string
+}
+
+func (l *LogWriteCloser) WriteBuf(s string) {
+	l.buf = append(l.buf, s)
+	if len(l.buf) > 50 {
+		createLog(l.bid, strings.Join(l.buf, "\n"))
+		l.buf = nil
+	}
+}
+func (l *LogWriteCloser) FlushBuf() {
+	if len(l.buf) > 0 {
+		createLog(l.bid, strings.Join(l.buf, "\n"))
+	}
 }
 
 func (l *LogWriteCloser) Write(p []byte) (n int, err error) {
@@ -22,7 +38,7 @@ func (l *LogWriteCloser) Write(p []byte) (n int, err error) {
 
 			lg := string(r)
 			if lg != "" {
-				createLog(l.bid, lg)
+				l.WriteBuf(lg)
 				//logger.Debug(lg)
 			}
 
@@ -43,10 +59,11 @@ func (l *LogWriteCloser) Close() error {
 	if l.rest != nil {
 		lg := string(l.rest)
 		if lg != "" {
-			createLog(l.bid, lg)
+			l.WriteBuf(lg)
 			//logger.Debug(lg)
 		}
 	}
+	l.FlushBuf()
 	return nil
 }
 
