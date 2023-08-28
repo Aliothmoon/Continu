@@ -27,7 +27,7 @@ const (
 
 type ConstructInfo struct {
 	BuildID     int32
-	Log         *LogWriteCloser
+	Log         *LogWriter
 	ProjectInfo *model.Project
 }
 
@@ -196,7 +196,6 @@ func doProcessExec(c *ConstructInfo) (err error) {
 
 	ProcessMap.Delete(c.BuildID)
 
-	_ = c.Log.Close()
 	return err
 }
 
