@@ -184,7 +184,7 @@ func doProcessExec(c *ConstructInfo) (err error) {
 	cmd.Stdout = c.Log
 	cmd.Stderr = c.Log
 	cmd.Dir = dir
-
+	Config(cmd)
 	err = cmd.Start()
 
 	if err != nil {

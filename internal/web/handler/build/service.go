@@ -127,7 +127,7 @@ func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
 		if err != nil {
 			msg += err.Error() + "\n"
 		}
-		err := process.Kill()
+		err := Kill(process)
 		if err != nil {
 			msg += err.Error()
 		} else {
