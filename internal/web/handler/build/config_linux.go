@@ -3,11 +3,15 @@
 package build
 
 import (
+	"github.com/Aliothmoon/Continu/internal/logger"
 	"os"
 	"os/exec"
 	"syscall"
 )
 
+func init() {
+	logger.Debug("Build By Linux Kill")
+}
 func Config(c *exec.Cmd) {
 	c.SysProcAttr = &syscall.SysProcAttr{
 		Setpgid: true,

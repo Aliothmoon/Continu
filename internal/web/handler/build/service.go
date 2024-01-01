@@ -123,11 +123,8 @@ func CancelBuildTask(c context.Context, ctx *app.RequestContext) {
 	var msg string
 	if ok {
 		process := value.(*os.Process)
-		err = process.Release()
-		if err != nil {
-			msg += err.Error() + "\n"
-		}
 		err := Kill(process)
+		process.Release()
 		if err != nil {
 			msg += err.Error()
 		} else {
