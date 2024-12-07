@@ -1,4 +1,5 @@
-### 集成开发小工具 Git Commit 即构建
+### How to use the integrated development tool Git Commit and Build?
 
-### 如何使用？
-#### 设置环境变量CI_USER=username#password 实现简单的Http Basic Auth 设置环境变量 CI_PORT 自定义服务端口 默认端口为6400
+#### Set the environment variable CI_USER=username#password to implement simple Http Basic Auth.
+
+#### Set the environment variable CI_PORT to customize the server port; the default port is 6400.
